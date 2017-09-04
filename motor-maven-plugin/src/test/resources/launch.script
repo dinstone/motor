@@ -1,0 +1,5 @@
+#!/bin/sh
+
+LAUNCHER_HOME={{a.b:aaa}}
+LAUNCHER_HOME={{ab:bbb}}
+LAUNCHER_HOME={{a.b.c:ccc}}
