@@ -78,13 +78,14 @@ public class ArchiverWriter implements AutoCloseable {
         writeEntry(rootPrefix + "bin/bootstrap.jar", loaderJar.openStream());
     }
 
-    public void writeScript(Application application, LaunchScript launchScript) throws IOException {
-        if (launchScript == null) {
-            launchScript = new LaunchScript();
-            launchScript.setProperties(new Properties());
+    public void writeScript(Application application, Launcher launcher) throws IOException {
+        if (launcher == null) {
+            launcher = new Launcher();
+            launcher.setProperties(new Properties());
+            launcher.setScript(new Script());
         }
 
-        Properties properties = launchScript.getProperties();
+        Properties properties = launcher.getProperties();
         if (properties == null) {
             properties = new Properties();
         }
@@ -93,20 +94,20 @@ public class ArchiverWriter implements AutoCloseable {
             properties.put("application.activator", application.getActivator());
         }
 
-        File scriptDir = launchScript.getDirectory();
-        if (scriptDir != null) {
+        Script script = launcher.getScript();
+        if (script != null && script.getDirectory() != null) {
             DirectoryScanner scanner = new DirectoryScanner();
-            scanner.setBasedir(launchScript.getDirectory());
-            scanner.setIncludes(launchScript.getIncludes());
-            scanner.setExcludes(launchScript.getExcludes());
+            scanner.setBasedir(script.getDirectory());
+            scanner.setIncludes(script.getIncludes());
+            scanner.setExcludes(script.getExcludes());
             scanner.addDefaultExcludes();
             scanner.scan();
 
-            String basePath = scriptDir.getAbsolutePath();
+            String basePath = script.getDirectory().getAbsolutePath();
             String[] includeFiles = scanner.getIncludedFiles();
             for (String includeFile : includeFiles) {
                 try (FileInputStream scriptFile = new FileInputStream(new File(basePath, includeFile))) {
-                    LaunchScriptParser scriptParser = new LaunchScriptParser(scriptFile, properties);
+                    ScriptParser scriptParser = new ScriptParser(scriptFile, properties);
                     writeEntry(rootPrefix + "bin/" + includeFile, new ByteArrayInputStream(scriptParser.toByteArray()));
                 }
             }
@@ -116,7 +117,7 @@ public class ArchiverWriter implements AutoCloseable {
             JarEntry entry = null;
             while ((entry = inputStream.getNextJarEntry()) != null) {
                 if (!entry.getName().startsWith("META-INF")) {
-                    LaunchScriptParser scriptParser = new LaunchScriptParser(inputStream, properties);
+                    ScriptParser scriptParser = new ScriptParser(inputStream, properties);
                     writeEntry(rootPrefix + "bin/" + entry.getName(),
                         new ByteArrayInputStream(scriptParser.toByteArray()));
                 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.dinstone.motor.maven;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +26,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LaunchScriptParser {
+public class ScriptParser {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{([\\w,.]+)(:.*?)?\\}\\}(?!\\})");
 
@@ -35,7 +36,7 @@ public class LaunchScriptParser {
 
     private final String content;
 
-    public LaunchScriptParser(InputStream inputStream, Properties properties) throws IOException {
+    public ScriptParser(InputStream inputStream, Properties properties) throws IOException {
         String content = loadContent(inputStream);
         this.content = expandPlaceholders(content, properties);
     }
@@ -73,7 +74,7 @@ public class LaunchScriptParser {
     }
 
     public byte[] toByteArray() {
-        return this.content.getBytes(UTF_8);
+        return content.getBytes(UTF_8);
     }
 
     public String getContent() {

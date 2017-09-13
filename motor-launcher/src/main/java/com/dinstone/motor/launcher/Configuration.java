@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.dinstone.motor.launcher;
 
 import java.io.File;
@@ -23,6 +24,10 @@ import java.net.URL;
 import java.util.Properties;
 
 public class Configuration {
+
+    public static final String LAUNCHER_HOME_TOKEN = "${launcher.home}";
+
+    public static final String APPLICATION_HOME_TOKEN = "${application.home}";
 
     private static final String LAUNCHER_HOME = "launcher.home";
 
@@ -111,18 +116,32 @@ public class Configuration {
     }
 
     public String getApplicationHome() {
-        // find applicationHome from launcher config
-        String applicationHome = getProperty(APPLICATION_HOME);
+        // find applicationHome from system properties
+        String applicationHome = System.getProperty(APPLICATION_HOME);
         if (applicationHome != null && applicationHome.length() > 0) {
-            // System.setProperty(APPLICATION_HOME, applicationHome);
+            return applicationHome;
+        }
+
+        // find applicationHome from launcher config
+        applicationHome = properties.getProperty(APPLICATION_HOME);
+        if (applicationHome != null && applicationHome.length() > 0) {
+            applicationHome = fillPlaceholder(applicationHome, getLauncherHome(), LAUNCHER_HOME_TOKEN);
+            System.setProperty(APPLICATION_HOME, applicationHome);
             return applicationHome;
         }
 
         // default setting launcher home with launcher home
         applicationHome = getLauncherHome();
         System.setProperty(APPLICATION_HOME, applicationHome);
-        setProperty(APPLICATION_HOME, applicationHome);
         return applicationHome;
+    }
+
+    public static String fillPlaceholder(String source, String replace, String partten) {
+        int index = source.indexOf(partten);
+        if (index == 0) {
+            source = replace + source.substring(partten.length());
+        }
+        return source;
     }
 
     public String getProperty(String name) {

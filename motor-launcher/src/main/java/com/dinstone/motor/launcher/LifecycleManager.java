@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.dinstone.motor.launcher;
 
 import java.io.BufferedReader;
@@ -39,8 +40,6 @@ import javax.naming.ConfigurationException;
 public class LifecycleManager {
 
     private static final Logger LOG = Logger.getLogger(LifecycleManager.class.getName());
-
-    protected static final String APPLICATION_HOME_TOKEN = "${application.home}";
 
     /**  */
     private static final String MESSAGE_INVALID = "INVALID";
@@ -308,11 +307,7 @@ public class LifecycleManager {
         Set<URL> classPaths = new LinkedHashSet<URL>();
         String[] tokens = classPath.split(",");
         for (String token : tokens) {
-            int index = token.indexOf(APPLICATION_HOME_TOKEN);
-            if (index == 0) {
-                token = applicationHome + token.substring(APPLICATION_HOME_TOKEN.length());
-            }
-
+            token = Configuration.fillPlaceholder(token, applicationHome, Configuration.APPLICATION_HOME_TOKEN);
             try {
                 URL url = new URL(token);
                 classPaths.add(url);

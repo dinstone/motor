@@ -20,10 +20,22 @@ import java.util.Properties;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
-public class LaunchScript extends FileSet {
+public class Launcher {
+
+    /** launcher script files */
+    @Parameter
+    private Script script;
 
     @Parameter
     private Properties properties;
+
+    public Script getScript() {
+        return script;
+    }
+
+    public void setScript(Script script) {
+        this.script = script;
+    }
 
     /**
      * Properties that should be expanded in the launch script.

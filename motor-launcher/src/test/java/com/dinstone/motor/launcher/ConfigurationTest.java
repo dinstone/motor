@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
-package com.dinstone.motor.maven;
+package com.dinstone.motor.launcher;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-public class LaunchScriptParserTest {
+public class ConfigurationTest {
 
     @Test
-    public void testToByteArray() throws Exception {
-        Properties properties = new Properties();
-        properties.setProperty("a.b", "haha");
-        properties.setProperty("ab", "heihei");
-        properties.setProperty("a.b.c", "heiha");
-        InputStream inputStream = new FileInputStream("src/test/resources/launch.script");
-        ScriptParser p = new ScriptParser(inputStream, properties);
+    public void testFillPlaceholder() {
+        String source = "${launcher.home}";
+        String replace = "/home/work/";
 
-        System.out.println(p.getContent());
+        String actual = Configuration.fillPlaceholder(source, replace, Configuration.LAUNCHER_HOME_TOKEN);
+        Assert.assertEquals(replace, actual);
     }
 
 }

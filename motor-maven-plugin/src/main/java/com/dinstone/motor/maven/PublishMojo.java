@@ -106,9 +106,9 @@ public class PublishMojo extends AbstractMojo {
     @Parameter
     private Application application;
 
-    /** Launch script configuration */
+    /** Launcher configuration */
     @Parameter
-    private LaunchScript launchScript;
+    private Launcher launcher;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (this.project.getPackaging().equals("pom")) {
@@ -129,12 +129,12 @@ public class PublishMojo extends AbstractMojo {
         getLog().info("Source file: " + source);
         File target = getTargetFile();
         getLog().info("Target file: " + target);
-        
+
         try (ArchiverWriter aw = new ArchiverWriter(target, includeBaseDirectory, finalName)) {
             // bootstrap
             aw.writeLauncher();
             // script
-            aw.writeScript(application, launchScript);
+            aw.writeScript(application, launcher);
 
             // lib
             Set<Artifact> libs = new HashSet<>();
