@@ -233,9 +233,12 @@ public class ArchiverWriter implements AutoCloseable {
         if (parent.endsWith("/")) {
             parent = parent.substring(0, parent.length() - 1);
             entry.setUnixMode(UnixStat.DIR_FLAG | UnixStat.DEFAULT_DIR_PERM);
+        } else if (parent.endsWith(".sh")) {
+            entry.setUnixMode(UnixStat.FILE_FLAG | UnixStat.DEFAULT_DIR_PERM);
         } else {
             entry.setUnixMode(UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM);
         }
+
         if (parent.lastIndexOf("/") != -1) {
             parent = parent.substring(0, parent.lastIndexOf("/") + 1);
             if (parent.length() > 0) {
