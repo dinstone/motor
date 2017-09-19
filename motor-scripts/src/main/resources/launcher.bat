@@ -32,10 +32,9 @@ set JAVA_OPTS=-server -Xss{{Xss:256k}} -Xms{{Xms:1g}} -Xmx{{Xmx:1g}} -Xmn{{Xmn:2
 set JAVA_GC=-verbose:gc -Xloggc:%GC_LOG% -XX:+PrintGCDetails -XX:+PrintGCDateStamps
 rem set JPDA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=y
 
-echo Using LAUNCHER_HOME:   "%LAUNCHER_HOME%"
+echo Using LAUNCHER_HOME: "%LAUNCHER_HOME%"
 echo Using LAUNCHER_OPTS: "%LAUNCHER_OPTS%"
-echo Using JAVA_OPTS: "%JAVA_OPTS%"
-echo Using JAVA_GC: "%JAVA_GC%"
+echo Using JAVA_OPTS    : "%JAVA_OPTS%"
 
 if ""%1"" == ""start"" goto doStart
 if ""%1"" == ""stop"" goto doStop

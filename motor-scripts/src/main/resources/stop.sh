@@ -1,8 +1,26 @@
 #!/bin/sh
 
-LAUNCHER_HOME=$(cd `dirname $0`; cd .. ; pwd)
-JAVA_OPTS="-Xms10m"
-LOGGING_CONFIG="-Djava.util.logging.config.file=$LAUNCHER_HOME/config/logging.properties"
-CLASSPATH="$LAUNCHER_HOME/bin/bootstrap.jar"
+# resolve links - $0 may be a softlink
+PRG="$0"
 
-java $JAVA_OPTS -Dlauncher.home=$LAUNCHER_HOME "$LOGGING_CONFIG" -classpath "$CLASSPATH" com.dinstone.motor.launcher.Launcher stop
+while [ -h "$PRG" ] ; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+PRGDIR=`dirname "$PRG"`
+EXECUTABLE=launcher.sh
+
+if [ ! -x "$PRGDIR"/"$EXECUTABLE" ]; then
+	echo "Cannot find $PRGDIR/$EXECUTABLE"
+	echo "The file is absent or does not have execute permission"
+	echo "This file is needed to run this program"
+	exit 1
+fi
+
+exec "$PRGDIR"/"$EXECUTABLE" stop

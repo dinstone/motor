@@ -160,7 +160,7 @@ public class ArchiverWriter implements AutoCloseable {
     }
 
     public void writeLog() throws IOException {
-        writeEntry(rootPrefix + "log/", null);
+        writeEntry(rootPrefix + "logs/", null);
     }
 
     /**
