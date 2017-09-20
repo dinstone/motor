@@ -6,12 +6,50 @@
 	<artifactId>motor</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
+	<name>motor</name>
 	<inceptionYear>2014~2017</inceptionYear>
-	<description>Motor is java launcher</description>
+	<description>Motor is a Java application launcher, simplify the start and stop grace of Java applications.</description>
+	<url>https://github.com/dinstone/motor.git</url>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
 	<organization>
 		<url>https://dinstone.github.io/</url>
 		<name>dinstone</name>
 	</organization>
+	<scm>
+		<url>https://github.com/dinstone/motor.git</url>
+		<connection>scm:git:https://github.com/dinstone/motor.git</connection>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/dinstone/motor/issues</url>
+		<system>github</system>
+	</issueManagement>
+	<developers>
+		<developer>
+			<name>dinstone</name>
+			<email>dinstone@163.com</email>
+			<roles>
+				<role>Owner</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -157,4 +195,5 @@
 		<module>motor-scripts</module>
 		<module>motor-maven-plugin</module>
 	</modules>
+
 </project>
