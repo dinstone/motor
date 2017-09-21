@@ -49,20 +49,17 @@ goto end
 
 :doStart
 shift
-set ACTION=start
-goto execCmd
+java %JAVA_OPTS% %JAVA_GC% %JPDA_OPTS% %LAUNCHER_OPTS% -Djava.io.tmpdir=%LAUNCHER_TMPDIR% -classpath %CLASSPATH% %MAINCLASS% start
+goto end
 
 :doStop
 shift
-set ACTION=stop
-goto execCmd
+java %LAUNCHER_OPTS% -Djava.io.tmpdir=%LAUNCHER_TMPDIR% -classpath %CLASSPATH% %MAINCLASS% stop
+goto end
 
 :doInfo
 shift
-set ACTION=info
-goto execCmd
-
-:execCmd
-java %JAVA_OPTS% %JAVA_GC% %JPDA_OPTS% -Djava.io.tmpdir=%LAUNCHER_TMPDIR% %LAUNCHER_OPTS% -classpath %CLASSPATH% %MAINCLASS% %ACTION%
+java %LAUNCHER_OPTS% -classpath %CLASSPATH% %MAINCLASS% info
+goto end
 
 :end

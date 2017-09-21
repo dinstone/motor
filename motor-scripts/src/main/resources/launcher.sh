@@ -149,7 +149,7 @@ elif [ "$1" = "stop" ] ; then
     fi
   fi
 
-  eval "\"$RUN_JAVA\"" $JAVA_OPTS $JAVA_GC $LAUNCHER_OPTS -Djava.io.tmpdir="\"$LAUNCHER_TMPDIR\"" -classpath $CLASSPATH $MAINCLASS "$@" stop
+  eval "\"$RUN_JAVA\"" $LAUNCHER_OPTS -Djava.io.tmpdir="\"$LAUNCHER_TMPDIR\"" -classpath $CLASSPATH $MAINCLASS "$@" stop
 
   # stop failed. Shutdown port disabled? Try a normal kill.
   if [ $? != 0 ]; then
