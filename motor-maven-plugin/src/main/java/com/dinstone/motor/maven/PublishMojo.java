@@ -38,7 +38,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * The Maven project.
      * 
-     * @since 1.0
      */
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
@@ -46,7 +45,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Maven project helper utils.
      * 
-     * @since 1.0
      */
     @Component
     private MavenProjectHelper projectHelper;
@@ -54,7 +52,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Directory containing the generated archive.
      * 
-     * @since 1.0
      */
     @Parameter(defaultValue = "${project.build.directory}", required = true)
     private File outputDirectory;
@@ -62,7 +59,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Name of the generated archive.
      * 
-     * @since 1.0
      */
     @Parameter(defaultValue = "${project.build.finalName}", required = true)
     private String finalName;
@@ -70,7 +66,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Skip the execution.
      * 
-     * @since 1.2
      */
     @Parameter(property = "motor.publish.skip", defaultValue = "false")
     private boolean skip;
@@ -83,7 +78,6 @@ public class PublishMojo extends AbstractMojo {
      * <a href= "http://maven.apache.org/plugins/maven-deploy-plugin/examples/deploying-with-classifiers.html" > the
      * maven documentation for more details</a>.
      * 
-     * @since 1.0
      */
     @Parameter
     private String classifier;
@@ -91,7 +85,6 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Attach the repackaged archive to be installed and deployed.
      * 
-     * @since 1.4
      */
     @Parameter(defaultValue = "false")
     private boolean attach = false;
