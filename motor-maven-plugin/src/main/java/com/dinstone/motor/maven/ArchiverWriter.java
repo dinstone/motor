@@ -78,11 +78,11 @@ public class ArchiverWriter implements AutoCloseable {
         writeEntry(rootPrefix + "bin/bootstrap.jar", loaderJar.openStream());
     }
 
-    public void writeScript(Application application, Launcher launcher) throws IOException {
+    public void writeScripts(Application application, Launcher launcher) throws IOException {
         if (launcher == null) {
             launcher = new Launcher();
             launcher.setProperties(new Properties());
-            launcher.setScript(new Script());
+            launcher.setScripts(new Script[0]);
         }
 
         Properties properties = launcher.getProperties();
@@ -94,22 +94,10 @@ public class ArchiverWriter implements AutoCloseable {
             properties.put("application.activator", application.getActivator());
         }
 
-        Script script = launcher.getScript();
-        if (script != null && script.getDirectory() != null) {
-            DirectoryScanner scanner = new DirectoryScanner();
-            scanner.setBasedir(script.getDirectory());
-            scanner.setIncludes(script.getIncludes());
-            scanner.setExcludes(script.getExcludes());
-            scanner.addDefaultExcludes();
-            scanner.scan();
-
-            String basePath = script.getDirectory().getAbsolutePath();
-            String[] includeFiles = scanner.getIncludedFiles();
-            for (String includeFile : includeFiles) {
-                try (FileInputStream scriptFile = new FileInputStream(new File(basePath, includeFile))) {
-                    ScriptParser scriptParser = new ScriptParser(scriptFile, properties);
-                    writeEntry(rootPrefix + "bin/" + includeFile, new ByteArrayInputStream(scriptParser.toByteArray()));
-                }
+        Script[] scripts = launcher.getScripts();
+        if (scripts != null && scripts.length > 0) {
+            for (Script script : scripts) {
+                writeScript(properties, script);
             }
         } else {
             URL scriptsJar = getClass().getClassLoader().getResource(NESTED_SCRIPT_JAR);
@@ -126,23 +114,45 @@ public class ArchiverWriter implements AutoCloseable {
         }
     }
 
-    public void writeConfig(Application application) throws IOException {
-        writeEntry(rootPrefix + "config/", null);
-        if (application != null && application.getConfig() != null) {
-            Config config = application.getConfig();
-            if (config.getDirectory() != null) {
-                DirectoryScanner scanner = new DirectoryScanner();
-                scanner.setBasedir(config.getDirectory());
-                scanner.setIncludes(config.getIncludes());
-                scanner.setExcludes(config.getExcludes());
-                scanner.addDefaultExcludes();
-                scanner.scan();
+    private void writeScript(Properties properties, Script script) throws IOException, FileNotFoundException {
+        if (script != null && script.getDirectory() != null) {
+            DirectoryScanner scanner = new DirectoryScanner();
+            scanner.setBasedir(script.getDirectory());
+            scanner.setIncludes(script.getIncludes());
+            scanner.setExcludes(script.getExcludes());
+            scanner.addDefaultExcludes();
+            scanner.scan();
 
-                String basePath = config.getDirectory().getAbsolutePath();
-                String[] includeFiles = scanner.getIncludedFiles();
-                for (String includeFile : includeFiles) {
-                    writeEntry(rootPrefix + "config/" + includeFile,
-                        new FileInputStream(new File(basePath, includeFile)));
+            String basePath = script.getDirectory().getAbsolutePath();
+            String[] includeFiles = scanner.getIncludedFiles();
+            for (String includeFile : includeFiles) {
+                try (FileInputStream scriptFile = new FileInputStream(new File(basePath, includeFile))) {
+                    ScriptParser scriptParser = new ScriptParser(scriptFile, properties);
+                    writeEntry(rootPrefix + "bin/" + includeFile, new ByteArrayInputStream(scriptParser.toByteArray()));
+                }
+            }
+        }
+    }
+
+    public void writeConfigs(Application application) throws IOException {
+        writeEntry(rootPrefix + "config/", null);
+        if (application != null && application.getConfigs() != null) {
+            Config[] configs = application.getConfigs();
+            for (Config config : configs) {
+                if (config.getDirectory() != null) {
+                    DirectoryScanner scanner = new DirectoryScanner();
+                    scanner.setBasedir(config.getDirectory());
+                    scanner.setIncludes(config.getIncludes());
+                    scanner.setExcludes(config.getExcludes());
+                    scanner.addDefaultExcludes();
+                    scanner.scan();
+
+                    String basePath = config.getDirectory().getAbsolutePath();
+                    String[] includeFiles = scanner.getIncludedFiles();
+                    for (String includeFile : includeFiles) {
+                        writeEntry(rootPrefix + "config/" + includeFile,
+                            new FileInputStream(new File(basePath, includeFile)));
+                    }
                 }
             }
         }

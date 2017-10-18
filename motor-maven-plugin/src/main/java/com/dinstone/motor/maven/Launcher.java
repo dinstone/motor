@@ -24,17 +24,17 @@ public class Launcher {
 
     /** launcher script files */
     @Parameter
-    private Script script;
+    private Script[] scripts;
 
     @Parameter
     private Properties properties;
 
-    public Script getScript() {
-        return script;
+    public Script[] getScripts() {
+        return scripts;
     }
 
-    public void setScript(Script script) {
-        this.script = script;
+    public void setScripts(Script[] scripts) {
+        this.scripts = scripts;
     }
 
     /**

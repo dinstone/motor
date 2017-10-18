@@ -22,7 +22,7 @@ public class Application {
 
     /** application config files */
     @Parameter
-    private Config config;
+    private Config[] configs;
 
     /**
      * The name of the activator class. If not specified the class found from 'META-INF/services/application.activator'
@@ -39,12 +39,12 @@ public class Application {
         this.activator = activator;
     }
 
-    public Config getConfig() {
-        return config;
+    public Config[] getConfigs() {
+        return configs;
     }
 
-    public void setConfig(Config config) {
-        this.config = config;
+    public void setConfigs(Config[] configs) {
+        this.configs = configs;
     }
 
 }

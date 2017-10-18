@@ -127,7 +127,7 @@ public class PublishMojo extends AbstractMojo {
             // bootstrap
             aw.writeLauncher();
             // script
-            aw.writeScript(application, launcher);
+            aw.writeScripts(application, launcher);
 
             // lib
             Set<Artifact> libs = new HashSet<>();
@@ -136,7 +136,7 @@ public class PublishMojo extends AbstractMojo {
             aw.writeLibraries(libs);
 
             // config
-            aw.writeConfig(application);
+            aw.writeConfigs(application);
 
             // log
             aw.writeLog();
