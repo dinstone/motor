@@ -20,16 +20,20 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 public class Application {
 
+    /**
+     * The name of the activator class. If not specified the class found from
+     * 'META-INF/services/application.activator' file.
+     */
+    @Parameter
+    private String activator;
+
     /** application config files */
     @Parameter
     private Config[] configs;
 
-    /**
-     * The name of the activator class. If not specified the class found from 'META-INF/services/application.activator'
-     * file.
-     */
+    /** application config files */
     @Parameter
-    private String activator;
+    private Resource[] resources;
 
     public String getActivator() {
         return activator;
@@ -45,6 +49,14 @@ public class Application {
 
     public void setConfigs(Config[] configs) {
         this.configs = configs;
+    }
+
+    public Resource[] getResources() {
+        return resources;
+    }
+
+    public void setResources(Resource[] resources) {
+        this.resources = resources;
     }
 
 }

@@ -107,7 +107,7 @@ public class ArchiverWriter implements AutoCloseable {
                 if (!entry.getName().startsWith("META-INF")) {
                     ScriptParser scriptParser = new ScriptParser(inputStream, properties);
                     writeEntry(rootPrefix + "bin/" + entry.getName(),
-                        new ByteArrayInputStream(scriptParser.toByteArray()));
+                            new ByteArrayInputStream(scriptParser.toByteArray()));
                 }
             }
             inputStream.close();
@@ -134,6 +134,17 @@ public class ArchiverWriter implements AutoCloseable {
         }
     }
 
+    public void writeLibraries(Set<Artifact> artifacts) throws IOException {
+        Set<String> seen = new HashSet<>();
+        String destination = rootPrefix + "lib/";
+        for (Artifact artifact : artifacts) {
+            if (!seen.add(destination + artifact.getFile().getName())) {
+                throw new IllegalStateException("Duplicate library " + artifact.getFile().getName());
+            }
+            writeLibrary(destination, artifact);
+        }
+    }
+
     public void writeConfigs(Application application) throws IOException {
         writeEntry(rootPrefix + "config/", null);
         if (application != null && application.getConfigs() != null) {
@@ -151,21 +162,42 @@ public class ArchiverWriter implements AutoCloseable {
                     String[] includeFiles = scanner.getIncludedFiles();
                     for (String includeFile : includeFiles) {
                         writeEntry(rootPrefix + "config/" + includeFile,
-                            new FileInputStream(new File(basePath, includeFile)));
+                                new FileInputStream(new File(basePath, includeFile)));
                     }
                 }
             }
         }
     }
 
-    public void writeLibraries(Set<Artifact> artifacts) throws IOException {
-        Set<String> seen = new HashSet<>();
-        String destination = rootPrefix + "lib/";
-        for (Artifact artifact : artifacts) {
-            if (!seen.add(destination + artifact.getFile().getName())) {
-                throw new IllegalStateException("Duplicate library " + artifact.getFile().getName());
+    public void writeResources(Application application) throws IOException {
+        if (application != null && application.getResources() != null) {
+            Resource[] resources = application.getResources();
+            for (Resource resource : resources) {
+                if (resource.getDirectory() != null && resource.getOutputDir() != null) {
+                    DirectoryScanner scanner = new DirectoryScanner();
+                    scanner.setBasedir(resource.getDirectory());
+                    scanner.setIncludes(resource.getIncludes());
+                    scanner.setExcludes(resource.getExcludes());
+                    scanner.addDefaultExcludes();
+                    scanner.scan();
+
+                    String outputDir = resource.getOutputDir();
+                    if (outputDir.startsWith("/")) {
+                        outputDir = outputDir.substring(1);
+                    }
+                    if (outputDir.length() > 0 && !outputDir.endsWith("/")) {
+                        outputDir += "/";
+                    }
+                    writeEntry(rootPrefix + outputDir, null);
+
+                    String basePath = resource.getDirectory().getAbsolutePath();
+                    String[] includeFiles = scanner.getIncludedFiles();
+                    for (String includeFile : includeFiles) {
+                        writeEntry(rootPrefix + outputDir + includeFile,
+                                new FileInputStream(new File(basePath, includeFile)));
+                    }
+                }
             }
-            writeLibrary(destination, artifact);
         }
     }
 
@@ -177,7 +209,7 @@ public class ArchiverWriter implements AutoCloseable {
      * Close the writer.
      * 
      * @throws IOException
-     *         if the file cannot be closed
+     *             if the file cannot be closed
      */
     @Override
     public void close() throws IOException {
@@ -210,14 +242,15 @@ public class ArchiverWriter implements AutoCloseable {
     }
 
     /**
-     * Writes an entry. The {@code inputStream} is closed once the entry has been written
+     * Writes an entry. The {@code inputStream} is closed once the entry has been
+     * written
      * 
      * @param entryName
-     *        The name of the entry
+     *            The name of the entry
      * @param inputStream
-     *        The stream from which the entry's data can be read
+     *            The stream from which the entry's data can be read
      * @throws IOException
-     *         if the write fails
+     *             if the write fails
      */
     private void writeEntry(String entryName, InputStream inputStream) throws IOException {
         JarArchiveEntry entry = new JarArchiveEntry(entryName);
@@ -229,14 +262,15 @@ public class ArchiverWriter implements AutoCloseable {
     }
 
     /**
-     * Perform the actual write of a {@link JarEntry}. All other {@code write} method delegate to this one.
+     * Perform the actual write of a {@link JarEntry}. All other {@code write}
+     * method delegate to this one.
      * 
      * @param entry
-     *        the entry to write
+     *            the entry to write
      * @param entryWriter
-     *        the entry writer or {@code null} if there is no content
+     *            the entry writer or {@code null} if there is no content
      * @throws IOException
-     *         in case of I/O errors
+     *             in case of I/O errors
      */
     private void writeEntry(JarArchiveEntry entry, EntryWriter entryWriter) throws IOException {
         String parent = entry.getName();
@@ -274,9 +308,9 @@ public class ArchiverWriter implements AutoCloseable {
          * Write entry data to the specified output stream.
          * 
          * @param outputStream
-         *        the destination for the data
+         *            the destination for the data
          * @throws IOException
-         *         in case of I/O errors
+         *             in case of I/O errors
          */
         void write(OutputStream outputStream) throws IOException;
 

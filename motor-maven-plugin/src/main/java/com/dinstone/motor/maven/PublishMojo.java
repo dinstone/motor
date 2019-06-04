@@ -71,12 +71,13 @@ public class PublishMojo extends AbstractMojo {
     private boolean skip;
 
     /**
-     * Classifier to add to the artifact generated. If given, the artifact will be attached with that classifier and the
-     * main artifact will be deployed as the main artifact. If this is not given (default), it will replace the main
-     * artifact and only the repackaged artifact will be deployed. Attaching the artifact allows to deploy it alongside
-     * to the original one, see
-     * <a href= "http://maven.apache.org/plugins/maven-deploy-plugin/examples/deploying-with-classifiers.html" > the
-     * maven documentation for more details</a>.
+     * Classifier to add to the artifact generated. If given, the artifact will be
+     * attached with that classifier and the main artifact will be deployed as the
+     * main artifact. If this is not given (default), it will replace the main
+     * artifact and only the repackaged artifact will be deployed. Attaching the
+     * artifact allows to deploy it alongside to the original one, see <a href=
+     * "http://maven.apache.org/plugins/maven-deploy-plugin/examples/deploying-with-classifiers.html"
+     * > the maven documentation for more details</a>.
      * 
      */
     @Parameter
@@ -137,6 +138,9 @@ public class PublishMojo extends AbstractMojo {
 
             // config
             aw.writeConfigs(application);
+
+            // resource
+            aw.writeResources(application);
 
             // log
             aw.writeLog();
