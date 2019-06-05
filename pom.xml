@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dinstone.motor</groupId>
 	<artifactId>motor</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 	<name>motor</name>
 	<inceptionYear>2014~2017</inceptionYear>

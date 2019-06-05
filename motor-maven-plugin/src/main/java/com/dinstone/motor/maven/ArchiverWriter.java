@@ -173,7 +173,7 @@ public class ArchiverWriter implements AutoCloseable {
         if (application != null && application.getResources() != null) {
             Resource[] resources = application.getResources();
             for (Resource resource : resources) {
-                if (resource.getDirectory() != null && resource.getOutputDir() != null) {
+                if (resource.getDirectory() != null) {
                     DirectoryScanner scanner = new DirectoryScanner();
                     scanner.setBasedir(resource.getDirectory());
                     scanner.setIncludes(resource.getIncludes());
@@ -182,6 +182,9 @@ public class ArchiverWriter implements AutoCloseable {
                     scanner.scan();
 
                     String outputDir = resource.getOutputDir();
+                    if (outputDir == null || outputDir.length() == 0) {
+                        outputDir = resource.getDirectory().getName();
+                    }
                     if (outputDir.startsWith("/")) {
                         outputDir = outputDir.substring(1);
                     }
